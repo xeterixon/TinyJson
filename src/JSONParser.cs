@@ -227,6 +227,21 @@ namespace TinyJson
                 splitArrayPool.Push(elems);
                 return list;
             }
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                Type listType = type.GetGenericArguments()[0];
+                if (json[0] != '[' || json[json.Length - 1] != ']')
+                    return null;
+
+                List<string> elems = Split(json);
+                
+                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
+                for (int i = 0; i < elems.Count; i++)
+                    list.Add(ParseValue(listType, elems[i]));
+                splitArrayPool.Push(elems);
+                return list;
+
+            }
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
                 Type keyType, valueType;

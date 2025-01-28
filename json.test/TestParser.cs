@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Text;
 using TinyJson;
 
@@ -74,6 +75,21 @@ namespace json.test
             ArrayTest(new float[] { 0.24f, 1.2f }, "[0.24,1.2]");
             ArrayTest(new double[] { 0.15, 0.19 }, "[0.15, 0.19]");
             ArrayTest<object>(null, "[garbled");
+        }
+
+        public static void EnumerableTest<T>(IEnumerable<T> expected, string json)
+        {
+            var value = json.FromJson<IEnumerable<T>>();
+            CollectionAssert.AreEqual(expected.ToList(), value.ToList());
+
+        }
+        [TestMethod]
+        public void TestList2()
+        {
+            var list = new List<string> { "one", "two", "three" };
+            EnumerableTest((IEnumerable<string>)list, "[\"one\",\"two\",\"three\"]");
+            EnumerableTest((IList<string>)list, "[\"one\",\"two\",\"three\"]");
+            EnumerableTest(list, "[\"one\",\"two\",\"three\"]");
         }
 
         static void ListTest<T>(List<T> expected, string json)
