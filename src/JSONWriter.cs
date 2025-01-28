@@ -13,6 +13,7 @@ namespace TinyJson
     //- Will only output public fields and property getters on objects
     public static class JSONWriter
     {
+        public static bool KeepNullValue = false;
         public static string ToJson(this object item)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -145,7 +146,7 @@ namespace TinyJson
                         continue;
 
                     object value = fieldInfos[i].GetValue(item);
-                    if (value != null)
+                    if ((value != null) || KeepNullValue)
                     {
                         if (isFirst)
                             isFirst = false;

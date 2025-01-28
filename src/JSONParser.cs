@@ -129,6 +129,10 @@ namespace TinyJson
         {
             if (type == typeof(string))
             {
+                if (json == "null")
+                {
+                    return null;
+                }
                 if (json.Length <= 2)
                     return string.Empty;
                 StringBuilder parseStringBuilder = new StringBuilder(json.Length);
@@ -204,6 +208,11 @@ namespace TinyJson
                     newArray.SetValue(ParseValue(arrayType, elems[i]), i);
                 splitArrayPool.Push(elems);
                 return newArray;
+            }
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                Type underlyingType = type.GetGenericArguments()[0];
+                return ParseValue(underlyingType, json);
             }
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
