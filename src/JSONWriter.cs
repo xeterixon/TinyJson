@@ -165,7 +165,7 @@ namespace TinyJson
                         continue;
 
                     object value = propertyInfo[i].GetValue(item, null);
-                    if (value != null)
+                    if (value != null || KeepNullValue)
                     {
                         if (isFirst)
                             isFirst = false;

@@ -52,6 +52,7 @@ namespace json.test
         {
             public string? Value1;
             public string Value2;
+            public string? Value3 { get; set; }
         }
         [TestMethod]
         public void TestNullString()
@@ -59,7 +60,7 @@ namespace json.test
             var testObject = new TestClass1 { Value2 = "Value2" };
             Assert.AreEqual("{\"Value2\":\"Value2\"}", testObject.ToJson());
             JSONWriter.KeepNullValue = true;
-            Assert.AreEqual("{\"Value1\":null,\"Value2\":\"Value2\"}", testObject.ToJson());
+            Assert.AreEqual("{\"Value1\":null,\"Value2\":\"Value2\",\"Value3\":null}", testObject.ToJson());
             JSONWriter.KeepNullValue = false;
         }
         class SimpleObject
