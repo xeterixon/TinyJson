@@ -214,20 +214,7 @@ namespace TinyJson
                 Type underlyingType = type.GetGenericArguments()[0];
                 return ParseValue(underlyingType, json);
             }
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
-            {
-                Type listType = type.GetGenericArguments()[0];
-                if (json[0] != '[' || json[json.Length - 1] != ']')
-                    return null;
-
-                List<string> elems = Split(json);
-                var list = (IList)type.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { elems.Count });
-                for (int i = 0; i < elems.Count; i++)
-                    list.Add(ParseValue(listType, elems[i]));
-                splitArrayPool.Push(elems);
-                return list;
-            }
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || type.GetGenericTypeDefinition() == typeof(List<>)))
             {
                 Type listType = type.GetGenericArguments()[0];
                 if (json[0] != '[' || json[json.Length - 1] != ']')
